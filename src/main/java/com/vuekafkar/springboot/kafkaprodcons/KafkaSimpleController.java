@@ -15,19 +15,26 @@ public class KafkaSimpleController {
     private KafkaTemplate<String, String> kafkaTemplate;
     private Gson jsonConverter;
 
-    /**
-     * Producer
-     */
-
     @Autowired
     public KafkaSimpleController(KafkaTemplate<String, String> kafkaTemplate, Gson jsonConverter){
         this.kafkaTemplate = kafkaTemplate;
         this.jsonConverter = jsonConverter;
     }
 
+    /**
+     * Producer
+     */
+
     @PostMapping
     public void post(@RequestBody SimpleModel simpleModel){
         kafkaTemplate.send("myTopic", jsonConverter.toJson(simpleModel));
+    }
+
+    @KafkaListener(topics = "myTopic")
+    public void getFromKafka(String simpleModel){
+        System.out.println(simpleModel);
+        SimpleModel simpleModel1 = jsonConverter.fromJson(simpleModel, SimpleModel.class);
+        System.out.println(simpleModel1.toString());
     }
 
     /**
@@ -39,13 +46,6 @@ public class KafkaSimpleController {
         kafkaTemplate.send("myTopic2", jsonConverter.toJson(moreSimpleModel));
     }
 
-    @KafkaListener(topics = "myTopic")
-    public void getFromKafka(String simpleModel){
-        System.out.println(simpleModel);
-        SimpleModel simpleModel1 = jsonConverter.fromJson(simpleModel, SimpleModel.class);
-        System.out.println(simpleModel1.toString());
-    }
-
     @KafkaListener(topics = "myTopic2")
 
     public void getFromKafka2(String moreSimpleModel){
@@ -53,5 +53,4 @@ public class KafkaSimpleController {
         MoreSimpleModel simpleModel1 = jsonConverter.fromJson(moreSimpleModel, MoreSimpleModel.class);
         System.out.println(simpleModel1.toString());
     }
-
 }
