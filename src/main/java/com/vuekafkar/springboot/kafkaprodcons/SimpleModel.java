@@ -1,17 +1,28 @@
 package com.vuekafkar.springboot.kafkaprodcons;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
 import java.io.Serializable;
 
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SimpleModel implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer simpleModelId;
     private String field1;
     private String field2;
 
-    public SimpleModel() {
+  /*  public SimpleModel() {
     }
 
     public SimpleModel(String field1, String field2) {
@@ -41,5 +52,5 @@ public class SimpleModel implements Serializable {
                 "field1='" + field1 + '\'' +
                 ", field2='" + field2 + '\'' +
                 '}';
-    }
+    }*/
 }
